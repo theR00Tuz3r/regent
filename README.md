@@ -3,7 +3,7 @@
 **Regent** (REsearch aGENT) is a basic AI-powered research tool that uses a locally running Ollama model to research topics and generate structured responses.
 
 It can search the web using DuckDuckGo, retrieve information from Wikipedia, and save research results to a text file.
-
+(might contain bugs)
 ## Features
 
 - Uses a local LLM through [Ollama](https://ollama.com/).

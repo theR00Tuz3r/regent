@@ -1,12 +1,8 @@
-from dotenv import load_dotenv
 from pydantic import BaseModel
 from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
 from tools import search_tool, wiki_tool, save_tool
-
-load_dotenv()
-
 
 class ResearchResponse(BaseModel):
     topic: str
@@ -14,10 +10,8 @@ class ResearchResponse(BaseModel):
     sources: list[str]
     tools: list[str]
 
-
 llm = ChatOllama(model="llama3.1:8b", temperature=0)
 
-# Step 1: the agent researches and answers in plain text (no JSON required)
 agent_prompt = ChatPromptTemplate.from_messages(
     [
         (
@@ -41,7 +35,6 @@ agent_executor = AgentExecutor(
     return_intermediate_steps=True,
 )
 
-# Step 2: a separate call converts the answer into the structured schema
 structure_prompt = ChatPromptTemplate.from_messages(
     [
         (
@@ -57,12 +50,11 @@ structure_prompt = ChatPromptTemplate.from_messages(
 )
 structurer = structure_prompt | llm.with_structured_output(ResearchResponse)
 
-query = input("What can I help you research? ")
+query = input("regent: What can I help you research? ")
 raw_response = agent_executor.invoke({"query": query})
 
 try:
     output = raw_response["output"]
-    # Some providers return a list of blocks instead of a string
     if isinstance(output, list):
         output = output[0]["text"]
 
